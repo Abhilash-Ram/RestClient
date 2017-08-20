@@ -1,0 +1,29 @@
+{
+  "name": "RestClient",
+  "version": "1.0.0",
+  "description": "This above web application is used to check the response from the JSON or xml web services",
+  "main": "RestWebService.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abhilash-Ram/RestClient.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Abhilash-Ram/RestClient/issues"
+  },
+  "homepage": "https://github.com/Abhilash-Ram/RestClient#readme",
+  "dependencies": {
+    "webpack": "^3.5.5"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.16",
+    "css-loader": "^0.28.5",
+    "html-webpack-plugin": "^2.30.1",
+    "style-loader": "^0.18.2"
+  }
+}
