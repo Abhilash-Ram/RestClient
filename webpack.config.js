@@ -1,9 +1,15 @@
+'use strict';
+
+var webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-  entry: './index.js',
+  entry: {
+    app:'./src/js/index.js',
+    vendor:["angular"]
+  },
   plugins: [
       new CleanWebpackPlugin(['dist']),
       new HtmlWebpackPlugin({
@@ -11,8 +17,8 @@ module.exports = {
       })
     ],
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: __dirname + '/js',
+    filename: 'app.bundle.js'
   },
    module: {
       rules: [
@@ -23,5 +29,11 @@ module.exports = {
             'css-loader'
           ]
         }]
-    }
+    },
+    plugins:[
+      new HtmlWebpackPlugin({
+      template: 'src/app.html'
+      }),
+        new webpack.optimize.CommonsChunkPlugin({name : "vendor", filename : "vendor.bundle.js"})
+    ]
 };
