@@ -1,8 +1,8 @@
-angular.module('ws', ['ui.router']);
+angular.module('ws', ['ui.router', 'jsonFormatter','toastr']);
 
 angular.module('ws')
-  .config(['$urlRouterProvider','$stateProvider', '$locationProvider',
-      function($urlRouterProvider, $stateProvider, $locationProvider){
+  .config(['$urlRouterProvider','$stateProvider', '$locationProvider', 'toastrConfig',
+      function($urlRouterProvider, $stateProvider, $locationProvider, toastrConfig){
     $stateProvider
       .state("app",{
         url:"/app",
@@ -12,6 +12,15 @@ angular.module('ws')
       });
     $urlRouterProvider.otherwise("/app");
     $locationProvider.hashPrefix("");
+    angular.extend(toastrConfig, {
+      autoDismiss: true,
+      containerId: 'toast-container',
+      maxOpened: 0,    
+      newestOnTop: true,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+      target: 'body'
+    });
   }]);
 angular.module('ws')
   .run(['$rootScope', function($rootScope){
@@ -20,7 +29,7 @@ angular.module('ws')
 angular.module('ws')
   .controller('wsController',wsControllerFunction);
 
-function wsControllerFunction( restService, $rootScope){
+function wsControllerFunction( restService, $rootScope, toastr){
   var vm = this;
   vm.history = [];
   vm.theme = $rootScope.theme;
@@ -57,10 +66,10 @@ function wsControllerFunction( restService, $rootScope){
   };
   vm.makeRequest = function( protocol, url, method){
     if(vm.checkWIP()){
-      restService.showToast('Request In Progress...!','bottom right')
+      toastr.warning('Request In Progress...!');
     }else{
       vm.showProgress = true
-      vm.showResultBanner = false
+      vm.resultData = undefined;
       var url_stub = protocol+"://"+url;
       vm.history.push({
         protocol : protocol,
@@ -82,12 +91,12 @@ function wsControllerFunction( restService, $rootScope){
       .then(function(response){
         if(response == 1001){
           vm.showProgress = false
-          restService.showToast('User Cancelled...!','bottom right')
+          toastr.warning('User Cancelled...!','bottom right')
         }else if(response == 1002){
           vm.showProgress = false
-          restService.showToast('Made Another Request...!','bottom right')
+          toastr.info('Made Another Request...!','bottom right')
         }else{
-          restService.showToast('Success Response...!','bottom right')
+          toastr.success('Success Response...!','bottom right')
           vm.showProgress = false
           vm.showResultBanner = true
           vm.resultData = [];
@@ -96,7 +105,7 @@ function wsControllerFunction( restService, $rootScope){
           vm.config = angular.fromJson(response.config)
         }
       },function(error){
-        restService.showToast('Error Response...!','bottom right')
+        toastr.error('Error Response...!','bottom right')
         vm.showProgress = false
         vm.showResultBanner = false
       });
@@ -131,7 +140,5 @@ angular.module('ws')
     }
     this.abort = function(reason){
       return D.resolve(reason);
-    }
-    this.showToast = function(message, position){
     }
   }); 

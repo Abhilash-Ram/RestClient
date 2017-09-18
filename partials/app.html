@@ -52,57 +52,49 @@
   </nav>
   <div class="col-md-12">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="row">
           <div class="col-md-2">
             <select ng-model="vm.user.protocol" class="form-control"
-             ng-init="vm.user.protocol= 'HTTP'">
-              <option ng-value="HTTP" value="http">Http</option>
-              <option ng-value="HTTPS" value="https">Https</option>
+             ng-init="vm.user.protocol= 'http'">
+              <option value="http">Http</option>
+              <option value="https">Https</option>
             </select>
           </div>
-          <div class="col-md-10">
+          <div class="col-md-8  pad-left">
             <input type="text" class="form-control" ng-model="vm.user.url"/>
+          </div>
+          <div class="col-md-2 pad-left">
+            <button ng-click="vm.showProgress ? vm.abort() :vm.makeRequest( vm.user.protocol, vm.user.url, vm.user.method)" class="btn" ng-class="vm.showProgress ? 'btn-danger' : 'btn-primary'">
+              <span class="glyphicon" ng-class="vm.showProgress ? 'glyphicon-remove-sign' : 'glyphicon-send'""></span>
+              &nbsp;{{vm.showProgress ? 'Stop' : 'Send'}}
+            </button>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-8" ng-init="vm.user.method = 'GET'">
             <label class="radio-inline">
-              <input type="radio" name="optradio">Get
+              <input type="radio" ng-model="vm.user.method" value="GET" name="optradio">Get
             </label>
             <label class="radio-inline">
-              <input type="radio" name="optradio">Post
+              <input type="radio" ng-model="vm.user.method" value="POST" name="optradio">Post
             </label>
             <label class="radio-inline">
-              <input type="radio" name="optradio">Put
+              <input type="radio" ng-model="vm.user.method" value="PUT" name="optradio">Put
             </label>
           </div>
         </div>
+        <div class="row" ng-if="vm.user.method=='POST'">
+          <div class="col-md-12">
+            <textarea class="form-control" ng-model="vm.postData"></textarea>
+          </div>
+        </div>
       </div>
-      <div class="col-md-4">
-        <json-formatter json="vm.resultJson"></json-formatter>
+      <div class="col-md-5" ng-if="vm.resultData">
+        <pre class="viewer">
+          <json-formatter json="vm.resultData"></json-formatter>
+        </pre>
       </div>
     </div>
   </div>
-
-       <md-input-container class="md-block"  flex='10' layout-align="center center" layout-wrap>
-         <md-button class="md-raised md-primary test-tooltip" ng-click="makeRequest( user.protocol, user.url, user.method)">
-           <md-tooltip md-direction="top">Send Request</md-tooltip>
-           <span class="glyphicon glyphicon-send"></span>&nbsp;send</md-button>
-      </md-input-container>
-                  <md-input-container class="md-block"  flex='10' layout-align="center center" layout-wrap>
-         <md-button class="md-raised md-accent test-tooltip" ng-click="abort()"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;stop</md-button>
-      </md-input-container>
-    </div>
-    <div layout-gt-sm="row">
-      <md-radio-group ng-model="user.method" ng-init="user.method = 'get'">
-        <md-radio-button value="get" class="md-primary">GET</md-radio-button>
-        <md-radio-button value="post" class="md-primary"> POST </md-radio-button>
-        <md-radio-button value="put" class="md-primary">PUT</md-radio-button>
-      </md-radio-group>
-      <md-input-container ng-if="user.method == 'post'" class="md-block"  flex='50'>
-             <label>Post Data</label>
-             <input type="textarea" ng-model="postData">
-     </md-input-container>
-    </div>
-   </md-content>
+</div>
