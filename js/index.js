@@ -13,13 +13,17 @@ angular.module('ws')
     $urlRouterProvider.otherwise("/app");
     $locationProvider.hashPrefix("");
   }]);
-
+angular.module('ws')
+  .run(['$rootScope', function($rootScope){
+    $rootScope.theme = "inverse";
+  }]);
 angular.module('ws')
   .controller('wsController',wsControllerFunction);
 
-function wsControllerFunction( restService){
+function wsControllerFunction( restService, $rootScope){
   var vm = this;
   vm.history = [];
+  vm.theme = $rootScope.theme;
   vm.fileOptions = [{
     title:"New"
   },{
@@ -30,11 +34,14 @@ function wsControllerFunction( restService){
     title:"Print"
   }];
   vm.themes = [{
-    title:"Dark",
+    title:"Black",
     theme:"inverse"
   },{
     title: "Light",
     theme:"default"
+  },{
+    title: "Dark",
+    theme:"dark"
   }]
   vm.showProgress = false;
   vm.showResultBanner = false;
