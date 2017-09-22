@@ -58,6 +58,7 @@ function wsControllerFunction( restService, $rootScope, toastr){
     url : 'services.odata.org/V3/Northwind/Northwind.svc/Employees'
   };
   vm.history= [];
+  vm.headers = [];
   vm.abort = function(){
     restService.abort(1001);
   };
@@ -76,6 +77,13 @@ function wsControllerFunction( restService, $rootScope, toastr){
         url:url,
         method:method
       })
+      for(var i = 0; i < vm.headers.length ;i++){
+        if(![null, undefined, ""].includes(vm.headers[i].headerKey) && ![null, undefined, ""].includes(vm.headers[i].headerValue) ){
+
+        }
+      }
+
+headerValue
       var headers =  {
         "Content-Type": "application/json"
       }

@@ -66,7 +66,7 @@
           </div>
           <div class="col-md-2 pad-left">
             <button ng-click="vm.showProgress ? vm.abort() :vm.makeRequest( vm.user.protocol, vm.user.url, vm.user.method)" class="btn" ng-class="vm.showProgress ? 'btn-danger' : 'btn-primary'">
-              <span class="glyphicon" ng-class="vm.showProgress ? 'glyphicon-remove-sign' : 'glyphicon-send'""></span>
+              <i class="fa" ng-class="vm.showProgress ? 'glyphicon-remove-sign' : 'fa-bolt'"></i>
               &nbsp;{{vm.showProgress ? 'Stop' : 'Send'}}
             </button>
           </div>
@@ -82,11 +82,32 @@
             <label class="radio-inline">
               <input type="radio" ng-model="vm.user.method" value="PUT" name="optradio">Put
             </label>
+            <label class="radio-inline">
+              <input type="radio" ng-model="vm.user.method" value="DELETE" name="optradio">Delete
+            </label>
+          </div>
+          <div class="col-md-2 col-md-offset-2 pad-left">
+            <button class="btn btn-info" ng-click="vm.headers.push({index:vm.headers.length})">Add Header</button>
           </div>
         </div>
-        <div class="row" ng-if="vm.user.method=='POST'">
+        <div class="row" ng-if="['POST','PUT'].includes(vm.user.method)">
           <div class="col-md-12">
-            <textarea class="form-control" ng-model="vm.postData"></textarea>
+            <textarea class="form-control" placeholder="" ng-model="vm.postData" rows="10" style="resize:none"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div ng-repeat="header in vm.headers">
+              <div class="col-md-3">
+                <input type="text" class="form-control" ng-model="vm['headerKey'+$index]" placeholder="Header Name" />
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control" ng-model="vm['headerValue'+$index]" placeholder="Header Value" />
+              </div>
+              <div class="col-md-1">
+                <span class="glyphicon glyphicon-remove" ng-click="vm.headers.splice(1,$index)"></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
