@@ -1,4 +1,4 @@
-angular.module('ws', ['ui.router', 'jsonFormatter','toastr']);
+angular.module('ws', ['ui.router','ngAnimate', 'ngSanitize', 'ui.bootstrap', 'jsonFormatter','toastr']);
 
 angular.module('ws')
   .config(['$urlRouterProvider','$stateProvider', '$locationProvider', 'toastrConfig',
@@ -17,7 +17,7 @@ angular.module('ws')
       containerId: 'toast-container',
       maxOpened: 0,    
       newestOnTop: true,
-      positionClass: 'toast-bottom-right',
+      positionClass: 'toast-top-center',
       preventDuplicates: true,
       target: 'body'
     });
@@ -29,18 +29,22 @@ angular.module('ws')
 angular.module('ws')
   .controller('wsController',wsControllerFunction);
 
-function wsControllerFunction( restService, $rootScope, toastr){
+function wsControllerFunction( restService, $rootScope, toastr, $uibModal){
   var vm = this;
   vm.history = [];
   vm.theme = $rootScope.theme;
   vm.fileOptions = [{
-    title:"New"
+    title:"New",
+    click:"addNewTab"
   },{
-    title:"Save"
+    title:"Save",
+    click:"saveJson"
   },{
-    title:"Share"
+    title:"Share",
+    click:""
   },{
-    title:"Print"
+    title:"Print",
+    click:"printJson"
   }];
   vm.themes = [{
     title:"Black",
@@ -48,9 +52,6 @@ function wsControllerFunction( restService, $rootScope, toastr){
   },{
     title: "Light",
     theme:"default"
-  },{
-    title: "Dark",
-    theme:"dark"
   }]
   vm.showProgress = false;
   vm.showResultBanner = false;
@@ -59,6 +60,25 @@ function wsControllerFunction( restService, $rootScope, toastr){
   };
   vm.history= [];
   vm.headers = [];
+  vm.addNewTab = function(){
+
+  }
+  vm.saveJson = function(){
+    $uibModal.open({
+      animation:true,
+      templateUrl:"partials/save.json.html",
+      controller:"saveJsonController",
+      controllerAs:"vm",
+      resolve:{
+        json : function(){
+          return vm.resultData;
+        }
+      }
+    });
+  }
+  vm.printJson = function(){
+
+  }
   vm.abort = function(){
     restService.abort(1001);
   };
@@ -79,11 +99,9 @@ function wsControllerFunction( restService, $rootScope, toastr){
       })
       for(var i = 0; i < vm.headers.length ;i++){
         if(![null, undefined, ""].includes(vm.headers[i].headerKey) && ![null, undefined, ""].includes(vm.headers[i].headerValue) ){
-
+          console.log("data", vm.headers[i]);
         }
       }
-
-headerValue
       var headers =  {
         "Content-Type": "application/json"
       }
@@ -99,21 +117,21 @@ headerValue
       .then(function(response){
         if(response == 1001){
           vm.showProgress = false
-          toastr.warning('User Cancelled...!','bottom right')
+          toastr.error('User Cancelled...!');
         }else if(response == 1002){
           vm.showProgress = false
-          toastr.info('Made Another Request...!','bottom right')
+          toastr.info('Made Another Request...!');
         }else{
-          toastr.success('Success Response...!','bottom right')
+          toastr.success('Success Response...!');
           vm.showProgress = false
           vm.showResultBanner = true
           vm.resultData = [];
           vm.config = [];
-          vm.resultData = angular.fromJson(response.data.value)
+          vm.resultData = angular.fromJson(response.data)
           vm.config = angular.fromJson(response.config)
         }
       },function(error){
-        toastr.error('Error Response...!','bottom right')
+        toastr.error('Error Response...!');
         vm.showProgress = false
         vm.showResultBanner = false
       });
@@ -150,3 +168,25 @@ angular.module('ws')
       return D.resolve(reason);
     }
   }); 
+  angular.module('ws')
+    .controller("saveJsonController", saveJsonController);
+    function saveJsonController($uibModalInstance, json){
+      var vm = this;
+      vm.close = function(data){
+        $uibModalInstance.close(data)
+      }
+      vm.dismiss = function(reason){
+        $uibModalInstance.dismiss(reason)
+      }
+      vm.create = function(filename){
+        var textToSaveAsBlob = new Blob([angular.toJson(json)], {type:"JSON/plain"});
+        var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+        var downloadLink = document.getElementById('download');
+        downloadLink.download = filename;
+        downloadLink.href = textToSaveAsURL;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        vm.close(true)
+      }
+
+    }

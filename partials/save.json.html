@@ -1,0 +1,12 @@
+<div class="modal-header">
+	<h4 class="no-margin">Save Response<span class="pull-right" ng-click="vm.dismiss('close')"><a href>&times;</a></span></h4>
+</div>
+<div class="modal-body">
+	<form>
+		<div class="form-group">
+			<label>File Name</label>
+			<input type="text" ng-model="vm.fileName" class="form-control" placeholder="Enter the file name">
+		</div>
+	</form>
+	<a id="download"><button class="btn btn-primary"  ng-click="vm.create(vm.fileName)">Save</button></a>
+</div>

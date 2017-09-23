@@ -51,6 +51,10 @@
         background-color: darkgrey;
         outline: 1px solid slategrey;
       }
+      .no-margin{
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
       .showResultBanner{
         width:96%;
         height:300px;

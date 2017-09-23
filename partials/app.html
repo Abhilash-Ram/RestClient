@@ -16,7 +16,7 @@
           <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-          <li><a href="javascript:void(0)" ng-repeat="option in vm.fileOptions">{{option.title}}</a></li>
+          <li><a href="javascript:void(0)" ng-repeat="option in vm.fileOptions" ng-click="vm[option.click]()">{{option.title}}</a></li>
         </ul>
       </li>
       <li class="dropdown">
@@ -66,7 +66,7 @@
           </div>
           <div class="col-md-2 pad-left">
             <button ng-click="vm.showProgress ? vm.abort() :vm.makeRequest( vm.user.protocol, vm.user.url, vm.user.method)" class="btn" ng-class="vm.showProgress ? 'btn-danger' : 'btn-primary'">
-              <i class="fa" ng-class="vm.showProgress ? 'glyphicon-remove-sign' : 'fa-bolt'"></i>
+              <i class="fa" ng-class="vm.showProgress ? 'fa-close' : 'fa-bolt'"></i>
               &nbsp;{{vm.showProgress ? 'Stop' : 'Send'}}
             </button>
           </div>
